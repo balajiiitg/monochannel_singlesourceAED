@@ -1,0 +1,38 @@
+ data_in: (72, 7, 250, 64)
+        data_out: (72, 50, 39) 
+
+
+MODEL:
+        dropout_rate: 0.05
+        CNN: nb_cnn_filt: 64, f_pool_size[4, 4, 2], t_pool_size[5, 1, 1]
+        rnn_size: 128, fnn_size: 128
+
+CRNN(
+  (conv_block_list): ModuleList(
+    (0): ConvBlock(
+      (conv): Conv2d(7, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (1): MaxPool2d(kernel_size=(5, 4), stride=(5, 4), padding=0, dilation=1, ceil_mode=False)
+    (2): Dropout2d(p=0.05, inplace=False)
+    (3): ConvBlock(
+      (conv): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (4): MaxPool2d(kernel_size=(1, 4), stride=(1, 4), padding=0, dilation=1, ceil_mode=False)
+    (5): Dropout2d(p=0.05, inplace=False)
+    (6): ConvBlock(
+      (conv): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+      (bn): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (7): MaxPool2d(kernel_size=(1, 2), stride=(1, 2), padding=0, dilation=1, ceil_mode=False)
+    (8): Dropout2d(p=0.05, inplace=False)
+  )
+  (gru): GRU(128, 128, num_layers=2, batch_first=True, dropout=0.05, bidirectional=True)
+  (fnn_list): ModuleList(
+    (0): Linear(in_features=128, out_features=128, bias=True)
+    (1): Linear(in_features=128, out_features=39, bias=True)# print the output 3 XYZ 13 3*13
+  )
+)
+
+Loss : MSE loss 
